@@ -1,0 +1,6 @@
+AfterResponse
+=============
+
+Adds an after_response callback method to perform actions after the HTTP response has been sent to
+the client.
+
