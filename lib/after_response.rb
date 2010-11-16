@@ -10,7 +10,12 @@ module AfterResponse
   ]
   
   def self.attach_to_current_container
-    current_container && require(current_container.lib)
+    return if @after_response_attached
+    if current_container
+      require(current_container.lib)
+      @after_response_attached = true
+      Rails.logger.info{ "AfterResponse callback hook installed for #{current_container.name}" }
+    end
   end
   
   def self.current_container

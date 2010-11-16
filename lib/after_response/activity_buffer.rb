@@ -4,16 +4,19 @@ module AfterResponse
     ActivityBuffer.callbacks
   end
   
-  def self.append_after_response
-    ActivityBuffer.append_after_response
+  def self.append_after_response(&block)
+    ActivityBuffer.append_after_response(&block)
   end
   
   module ActivityBuffer
     
     def self.append_after_response(&block)
+      Rails.logger.debug{ "Appending after_response in thread #{Thread.current.inspect}" }
       if AfterResponse.bufferable?
-        after_response_callbacks << block
+        Rails.logger.debug{ "Buffering after_response block..." }
+        callbacks << block
       else
+        Rails.logger.debug{ "Calling after_response block due to !bufferable?..." }
         block.call
       end
     end
@@ -22,14 +25,11 @@ module AfterResponse
       Thread.current[:__after_response_callbacks__] ||= []
     end
     
-    delegate :callbacks, :append_after_response, :to => 'self.class'
-    
-  end
-  
-  module PerformActivityBuffer
-    
-    def perform_after_response_buffer!
+    def self.perform_after_response_buffer!
+      Rails.logger.debug{ "Calling after_response blocks..." }
+      Rails.logger.debug{ "Calling blocks for thread #{Thread.current.inspect}" }
       AfterResponse.callbacks.each do |b|
+        Rails.logger.debug{ " * Calling after_response block #{b}" }
         b.call
       end
     ensure
