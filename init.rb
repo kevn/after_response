@@ -1,5 +1,5 @@
 require 'after_response'
 
-AfterResponse.attach_to_current_container
+AfterResponse.attach_to_current_container!
 
-ActionController::Base.send(:include, AfterResponse::ActivityBuffer)
+ActionController::Base.send(:include, AfterResponse::Callbacks)
