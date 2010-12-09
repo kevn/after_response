@@ -1,6 +1,6 @@
 
 module AfterResponse
-  
+
   CONTAINER_ADAPTERS = [
     OpenStruct.new(
       :name => :passenger3,
@@ -13,7 +13,7 @@ module AfterResponse
       :lib  => 'after_response/adapters/passenger2'
     )
   ]
-  
+
   def self.attach_to_current_container!
     return if @after_response_attached
     if current_container
@@ -24,13 +24,13 @@ module AfterResponse
       Rails.logger.info{ "[AfterResponse] => No supported container found. AfterResponse will not buffer." }
     end
   end
-  
+
   def self.current_container
     @current_container ||= CONTAINER_ADAPTERS.detect{|c| c.test.call }
   end
-  
+
   def self.bufferable?
     @current_container
   end
-  
+
 end
