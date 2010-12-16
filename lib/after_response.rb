@@ -11,8 +11,9 @@ module AfterResponse
     ),
     OpenStruct.new(
       :name => :passenger2,
-      :test => lambda{ defined?(PhusionPassenger) && PhusionPassenger::VERSION_STRING == '2.2.14' },
-      :lib  => 'after_response/adapters/passenger2'
+      # This has only been tested on 2.2.14 and 2.2.15. Other 2.2.x might work if the main_loop method is unchanged.
+      :test => lambda{ defined?(PhusionPassenger) && ['2.2.14', '2.2.15'].include?(PhusionPassenger::VERSION_STRING) },
+      :lib  => 'after_response/adapters/passenger2_2'
     ),
     OpenStruct.new(
       :name => :unicorn_middleware,
