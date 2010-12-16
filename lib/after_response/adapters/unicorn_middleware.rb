@@ -6,7 +6,7 @@ module AfterResponse
     #
     #     require 'after_response/adapters/unicorn'
     #
-    #     use AfterResponse::Adapters::Unicorn
+    #     use AfterResponse::Adapters::UnicornMiddleware
     class UnicornMiddleware < Struct.new(:app, :body)
 
       def initialize(app)
@@ -22,6 +22,7 @@ module AfterResponse
         body.each(&block)
       end
 
+      # In Unicorn, this is called _after_ the socket is closed. (Not true for at least passenger3)
       def close
         body.close if body.respond_to?(:close)
         AfterResponse::Callbacks.perform_after_response_callbacks!
