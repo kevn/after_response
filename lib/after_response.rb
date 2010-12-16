@@ -14,16 +14,18 @@ module AfterResponse
       :test => lambda{ defined?(PhusionPassenger) && PhusionPassenger::VERSION_STRING == '2.2.14' },
       :lib  => 'after_response/adapters/passenger2'
     ),
-    # OpenStruct.new(
-    #   :name => :unicorn_middleware,
-    #   :test => lambda{ defined?(Unicorn) }, # FIXME: Find out if Unicorn MIDDLEWARE is installed
-    #   :lib  => 'after_response/adapters/unicorn_middleware'
-    # ),
     OpenStruct.new(
-      :name => :unicorn,
+      :name => :unicorn_middleware,
       :test => lambda{ defined?(Unicorn) },
-      :lib  => 'after_response/adapters/unicorn'
-    )
+      :lib  => 'after_response/adapters/unicorn_middleware'
+    ),
+    # FIXME: Find a better way to inspect the installed Rack middleware for the above and fallback
+    # to monkeypatch if middleware isn't installed.
+    # OpenStruct.new(
+    #   :name => :unicorn_monkeypatch,
+    #   :test => lambda{ defined?(Unicorn) },
+    #   :lib  => 'after_response/adapters/unicorn_monkeypatch'
+    # )
   ]
 
   def self.attach_to_current_container!
