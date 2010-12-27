@@ -17,16 +17,18 @@ module AfterResponse
     ),
     OpenStruct.new(
       :name => :unicorn_middleware,
-      :test => lambda{ defined?(Unicorn) },
-      :lib  => 'after_response/adapters/unicorn_middleware'
+      # TODO: Find a more general non-Rails-specific way of inspecting installed middleware
+      :test => lambda{ 
+                       defined?(Unicorn) &&
+                       defined?(Rails)   &&
+                       ActionController::Dispatcher.middleware.active.detect{|m| m == AfterResponse::Adapters::UnicornMiddleware }
+               }
     ),
-    # FIXME: Find a better way to inspect the installed Rack middleware for the above and fallback
-    # to monkeypatch if middleware isn't installed.
-    # OpenStruct.new(
-    #   :name => :unicorn_monkeypatch,
-    #   :test => lambda{ defined?(Unicorn) },
-    #   :lib  => 'after_response/adapters/unicorn_monkeypatch'
-    # )
+    OpenStruct.new(
+      :name => :unicorn_monkeypatch,
+      :test => lambda{ defined?(Unicorn) },
+      :lib  => 'after_response/adapters/unicorn_monkeypatch'
+    )
   ]
 
   def self.attach_to_current_container!
@@ -52,7 +54,7 @@ module AfterResponse
   # where an after_response callback hook was installed and if an after_response callback
   # was installed that calls Starboard::EventQueue.flush!
   def self.bufferable?
-    current_container
+    @after_response_attached
   end
 
   def self.logger
