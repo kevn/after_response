@@ -11,7 +11,7 @@ the response to the client application sooner. This would mainly include logging
 event logging service, sending email and other tasks that do not affect the response body in any way.
 EOF
 
-  s.files           = Dir['{lib/*,rails/*}'] +
+  s.files           = Dir['{lib/**/*,rails/**/*}'] +
                         %w(after_response.gemspec CHANGELOG README)
   s.require_path    = 'lib'
   s.extra_rdoc_files = ['README', 'CHANGELOG']
