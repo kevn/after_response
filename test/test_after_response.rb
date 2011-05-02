@@ -7,6 +7,7 @@ class AfterResponseTest < Test::Unit::TestCase
 
   def teardown
     AfterResponse.reset!
+    remove_fake_container
   end
 
   def test_attach_to_current_container
@@ -32,6 +33,12 @@ class AfterResponseTest < Test::Unit::TestCase
     assert_equal 1, some_value
   end
 
+  def test_manual_flush
+    AfterResponse.reset!
+    AfterResponse.buffer_and_flush_manually!
+    assert AfterResponse.bufferable?
+  end
+
 protected
   def attach_to_fake_current_container
     AfterResponse::CONTAINER_ADAPTERS << OpenStruct.new(
@@ -40,6 +47,10 @@ protected
       :lib  => File.dirname(__FILE__) + '/fake_adapter'
     ) unless AfterResponse::CONTAINER_ADAPTERS.detect{ |adapter| adapter.name == :fake }
     AfterResponse.attach_to_current_container!
+  end
+
+  def remove_fake_container
+    AfterResponse::CONTAINER_ADAPTERS.delete_if{|s| s.name == :fake }
   end
 
 end

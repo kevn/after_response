@@ -57,6 +57,16 @@ module AfterResponse
     @after_response_attached
   end
 
+  # If a container adapter isn't available, this method can be called to enable the buffering of events,
+  # and Starboard::EventQueue.flush! must be called manually
+  def self.buffer_and_flush_manually!
+    @after_response_attached ||= begin
+      raise "Callback hook already installed for #{current_container.name}" if current_container
+      logger.info{ "[AfterResponse] => Will flush manually" }
+      true
+    end
+  end
+
   def self.logger
     @logger ||= begin
       if defined?(Rails)
