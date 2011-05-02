@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name            = "after_response"
-  s.version         = "0.9.2"
+  s.version         = "0.9.3"
   s.platform        = Gem::Platform::RUBY
   s.summary         = "Provides hooks to execute callbacks after the response has been delivered to the client."
 
