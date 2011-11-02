@@ -19,14 +19,14 @@ module AfterResponse
       :name => :unicorn_middleware,
       # TODO: Find a more general non-Rails-specific way of inspecting installed middleware
       :test => lambda{ 
-                       defined?(Unicorn) &&
+                       defined?(Unicorn::HttpServer) &&
                        defined?(Rails)   &&
                        ActionController::Dispatcher.middleware.active.detect{|m| m == AfterResponse::Adapters::UnicornMiddleware }
                }
     ),
     OpenStruct.new(
       :name => :unicorn_monkeypatch,
-      :test => lambda{ defined?(Unicorn) },
+      :test => lambda{ defined?(Unicorn::HttpServer) },
       :lib  => 'after_response/adapters/unicorn_monkeypatch'
     )
   ]
