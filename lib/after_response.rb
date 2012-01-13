@@ -27,6 +27,11 @@ module AfterResponse
                        defined?(Rails)   &&
                        mw.detect{|m| m == AfterResponse::Adapters::UnicornMiddleware }
                }
+    ),
+    OpenStruct.new(
+      :name => :unicorn_monkeypatch,
+      :test => lambda{ defined?(Unicorn::HttpServer) },
+      :lib  => 'after_response/adapters/unicorn_monkeypatch'
     )
   ]
 
