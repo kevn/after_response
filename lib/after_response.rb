@@ -1,5 +1,6 @@
 require 'ostruct'
 require 'after_response/callbacks'
+require 'after_response/adapters/unicorn_middleware'
 
 module AfterResponse
 
@@ -19,15 +20,13 @@ module AfterResponse
       :name => :unicorn_middleware,
       # TODO: Find a more general non-Rails-specific way of inspecting installed middleware
       :test => lambda{ 
+                       # Use the appropriate middleware object for Rails2 or Rails 3
+                       mw = defined?(ActionController::Dispatcher.middleware) ? ActionController::Dispatcher.middleware.active : Rails.application.config.middleware
+                       
                        defined?(Unicorn::HttpServer) &&
                        defined?(Rails)   &&
-                       ActionController::Dispatcher.middleware.active.detect{|m| m == AfterResponse::Adapters::UnicornMiddleware }
+                       mw.detect{|m| m == AfterResponse::Adapters::UnicornMiddleware }
                }
-    ),
-    OpenStruct.new(
-      :name => :unicorn_monkeypatch,
-      :test => lambda{ defined?(Unicorn::HttpServer) },
-      :lib  => 'after_response/adapters/unicorn_monkeypatch'
     )
   ]
 
